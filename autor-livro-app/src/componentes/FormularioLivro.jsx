@@ -10,7 +10,7 @@ const FormularioLivro = ({ autores }) => {
   const [livroEditando, setLivroEditando] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  const handleSubmit = (e) => {
+  const adicionarLivro = (e) => {
     e.preventDefault();
 
     if (!autor) {
@@ -24,7 +24,7 @@ const FormularioLivro = ({ autores }) => {
     }
 
     const novoLivro = {
-      id: livros.length + 1,
+      id: livros.length > 0 ? livros[livros.length - 1].id + 1 : 1,
       titulo: titulo.trim(),
       autorId: autor.id,
       autorNome: autor.nome,
@@ -83,7 +83,7 @@ const FormularioLivro = ({ autores }) => {
   return (
     <div className="mt-5">
       <h3>Cadastrar Livro</h3>
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={adicionarLivro}>
         <Form.Group controlId="formTituloLivro">
           <Form.Label>Título do Livro:</Form.Label>
           <Form.Control
@@ -146,7 +146,7 @@ const FormularioLivro = ({ autores }) => {
                 type="text"
                 value={titulo}
                 onChange={(e) => setTitulo(e.target.value)}
-              /> 
+              />
             </Form.Group>
             <Form.Group controlId="formEditarAutorLivro">
               <Form.Label>Autor:</Form.Label>

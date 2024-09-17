@@ -15,7 +15,7 @@ const FormularioAutor = ({ autores, setAutores }) => {
     }
 
     const novoAutor = {
-      id: autores.length + 1,
+      id: autores.length > 0 ? autores[autores.length - 1].id + 1 : 1,
       nome: nomeAutor.trim(),
     };
 
@@ -38,7 +38,6 @@ const FormularioAutor = ({ autores, setAutores }) => {
     const autoresAtualizados = autores.map((autor) =>
       autor.id === autorEditando.id ? { ...autor, nome: nomeAutor.trim() } : autor
     );
-
     setAutores(autoresAtualizados);
     cancelarEdicao();
   };
