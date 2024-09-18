@@ -1,51 +1,83 @@
-// src/componentes/GerenciarAutores.js
-import React, { useState } from 'react';
-import { Form, Button, ListGroup } from 'react-bootstrap';
+import React, { useState, useContext, useEffect } from 'react';
+import { Alert } from 'react-bootstrap';
+import FormCadAutor from './Formularios/FormCadAutor';
+import TabelaAutores from './Tabelas/TabelaAutores';
+import Pagina from './Templates/Pagina';
+import { ContextoUsuarioLogado } from '../App';
+import { consultarTodos, gravar, alterar, excluir } from '../servicos/autorService';
 
-const GerenciarAutores = ({ autores, setAutores }) => {
-  const [nomeAutor, setNomeAutor] = useState('');
+const GerenciarAutores = () => {
+    const [autores, setAutores] = useState([]);
+    const [autorSelecionado, setAutorSelecionado] = useState(null); // Para edição
+    const [mensagem, setMensagem] = useState('');
+    const [tipoMensagem, setTipoMensagem] = useState(''); // success ou danger
+    const { token } = useContext(ContextoUsuarioLogado); // Token de autenticação
 
-  const adicionarAutor = (e) => {
-    e.preventDefault();
-    if (nomeAutor.trim() === '') {
-      alert('Por favor, insira o nome do autor.');
-      return;
-    }
+    useEffect(() => {
+        carregarAutores();
+    }, []);
 
-    const novoAutor = {
-      id: autores.length + 1,
-      nome: nomeAutor.trim(),
+    const carregarAutores = async () => {
+        try {
+            const resultado = await consultarTodos(token);
+            setAutores(resultado);
+        } catch (erro) {
+            setMensagem('Erro ao carregar autores.');
+            setTipoMensagem('danger');
+        }
     };
 
-    setAutores([...autores, novoAutor]);
-    setNomeAutor('');
-  };
+    const handleGravar = async (dadosAutor) => {
+        try {
+            if (autorSelecionado) {
+                await alterar(dadosAutor, token);
+                setMensagem('Autor atualizado com sucesso!');
+            } else {
+                await gravar(dadosAutor, token);
+                setMensagem('Autor gravado com sucesso!');
+            }
+            setTipoMensagem('success');
+            carregarAutores();
+            setAutorSelecionado(null); // Limpar seleção após gravar
+        } catch (erro) {
+            setMensagem('Erro ao gravar autor.');
+            setTipoMensagem('danger');
+        }
+    };
 
-  return (
-    <div className="mt-4">
-      <h3>Gerenciar Autores</h3>
-      <Form onSubmit={adicionarAutor}>
-        <Form.Group controlId="formNomeAutor">
-          <Form.Label>Nome do Autor:</Form.Label>
-          <Form.Control
-            type="text"
-            value={nomeAutor}
-            onChange={(e) => setNomeAutor(e.target.value)}
-            placeholder="Digite o nome do autor"
-          />
-        </Form.Group>
-        <Button variant="success" type="submit">
-          Adicionar Autor
-        </Button>
-      </Form>
-      <h4 className="mt-4">Autores Cadastrados</h4>
-      <ListGroup>
-        {autores.map((autor) => (
-          <ListGroup.Item key={autor.id}>{autor.nome}</ListGroup.Item>
-        ))}
-      </ListGroup>
-    </div>
-  );
+    const handleEditar = (autor) => {
+        setAutorSelecionado(autor); // Selecionar autor para edição
+    };
+
+    const handleExcluir = async (codigo) => {
+        try {
+            await excluir(codigo, token);
+            setMensagem('Autor excluído com sucesso!');
+            setTipoMensagem('success');
+            carregarAutores();
+        } catch (erro) {
+            setMensagem('Erro ao excluir autor.');
+            setTipoMensagem('danger');
+        }
+    };
+
+    return (
+        <Pagina titulo="Gerenciar Autores">
+            {mensagem && <Alert variant={tipoMensagem}>{mensagem}</Alert>}
+            
+            <FormCadAutor 
+                onGravar={handleGravar} 
+                autorSelecionado={autorSelecionado} 
+                setAutorSelecionado={setAutorSelecionado}
+            />
+
+            <TabelaAutores 
+                autores={autores} 
+                onEditar={handleEditar} 
+                onExcluir={handleExcluir} 
+            />
+        </Pagina>
+    );
 };
 
 export default GerenciarAutores;

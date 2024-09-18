@@ -1,19 +1,23 @@
-// src/componentes/Login.js
-import React, { useState } from 'react';
+// src/componentes/Login.jsx
+import React, { useState, useContext } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
+import { ContextoUsuarioLogado } from '../App';
+import { useNavigate } from 'react-router-dom';
 
-const Login = ({ aoLogar }) => {
+const Login = () => {
   const [usuario, setUsuario] = useState('');
   const [senha, setSenha] = useState('');
+  const { setUsuarioLogado } = useContext(ContextoUsuarioLogado);
+  const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     // Simulação de autenticação
     if (usuario === 'admin' && senha === '1234') {
-      const tokenSimulado = 'token_simulado';
-      localStorage.setItem('token', tokenSimulado);
-      aoLogar();
+      setUsuarioLogado({ nome: 'Administrador' });
+      localStorage.setItem('token', 'token_simulado');
+      navigate('/autores');
     } else {
       alert('Usuário ou senha inválidos.');
     }
@@ -45,7 +49,7 @@ const Login = ({ aoLogar }) => {
               />
             </Form.Group>
 
-            <Button variant="primary" type="submit" block>
+            <Button variant="primary" type="submit" className="w-100 mt-3">
               Entrar
             </Button>
           </Form>
