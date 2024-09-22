@@ -1,17 +1,17 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Alert } from 'react-bootstrap';
-import FormCadLivro from './Formularios/FormCadLivro';
-import TabelaLivros from './Tabelas/TabelaLivros';
+import FormCadLivro from './Formularios/FormCadLivro.jsx';
+import TabelaLivros from './Tabelas/TabelaLivros.jsx';
 import Pagina from './Templates/Pagina';
 import { ContextoUsuarioLogado } from '../App';
-import { consultarTodos, gravar, alterar, excluir } from '../servicos/livroService';
+import { consultarTodos, gravar, alterar, excluir } from '../servicos/livroService.js';
 
 const GerenciarLivros = () => {
     const [livros, setLivros] = useState([]);
-    const [livroSelecionado, setLivroSelecionado] = useState(null); // Para edição
+    const [livroSelecionado, setLivroSelecionado] = useState(null); 
     const [mensagem, setMensagem] = useState('');
-    const [tipoMensagem, setTipoMensagem] = useState(''); // success ou danger
-    const { token } = useContext(ContextoUsuarioLogado); // Token de autenticação
+    const [tipoMensagem, setTipoMensagem] = useState(''); 
+    const { token } = useContext(ContextoUsuarioLogado); 
 
     useEffect(() => {
         carregarLivros();
@@ -38,7 +38,7 @@ const GerenciarLivros = () => {
             }
             setTipoMensagem('success');
             carregarLivros();
-            setLivroSelecionado(null); // Limpar seleção após gravar
+            setLivroSelecionado(null);
         } catch (erro) {
             setMensagem('Erro ao gravar livro.');
             setTipoMensagem('danger');
@@ -46,7 +46,7 @@ const GerenciarLivros = () => {
     };
 
     const handleEditar = (livro) => {
-        setLivroSelecionado(livro); // Selecionar livro para edição
+        setLivroSelecionado(livro); 
     };
 
     const handleExcluir = async (codigo) => {

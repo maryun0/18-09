@@ -8,10 +8,10 @@ import { consultarTodos, gravar, alterar, excluir } from '../servicos/autorServi
 
 const GerenciarAutores = () => {
     const [autores, setAutores] = useState([]);
-    const [autorSelecionado, setAutorSelecionado] = useState(null); // Para edição
+    const [autorSelecionado, setAutorSelecionado] = useState(null); 
     const [mensagem, setMensagem] = useState('');
-    const [tipoMensagem, setTipoMensagem] = useState(''); // success ou danger
-    const { token } = useContext(ContextoUsuarioLogado); // Token de autenticação
+    const [tipoMensagem, setTipoMensagem] = useState(''); 
+    const { token } = useContext(ContextoUsuarioLogado); 
 
     useEffect(() => {
         carregarAutores();
@@ -38,7 +38,7 @@ const GerenciarAutores = () => {
             }
             setTipoMensagem('success');
             carregarAutores();
-            setAutorSelecionado(null); // Limpar seleção após gravar
+            setAutorSelecionado(null); 
         } catch (erro) {
             setMensagem('Erro ao gravar autor.');
             setTipoMensagem('danger');
@@ -46,7 +46,7 @@ const GerenciarAutores = () => {
     };
 
     const handleEditar = (autor) => {
-        setAutorSelecionado(autor); // Selecionar autor para edição
+        setAutorSelecionado(autor); 
     };
 
     const handleExcluir = async (codigo) => {

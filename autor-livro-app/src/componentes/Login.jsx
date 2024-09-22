@@ -13,7 +13,6 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Simulação de autenticação
     if (usuario === 'admin' && senha === '1234') {
       setUsuarioLogado({ nome: 'Administrador' });
       localStorage.setItem('token', 'token_simulado');

@@ -34,7 +34,7 @@ const FormCadLivro = ({ onGravar, livroSelecionado, setLivroSelecionado }) => {
         setIsbn('');
         setDataPublicacao('');
         setAutorCodigo('');
-        setLivroSelecionado(null); // Limpar após gravação
+        setLivroSelecionado(null);
     };
 
     return (
